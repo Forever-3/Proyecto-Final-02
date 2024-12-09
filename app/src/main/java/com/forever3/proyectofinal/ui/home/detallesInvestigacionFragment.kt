@@ -1,15 +1,22 @@
+
 package com.forever3.proyectofinal.ui.home
 
+
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.forever3.proyectofinal.R
+
+import com.forever3.proyectofinal.ui.home.cls_Investigacion
 
 class detallesInvestigacionFragment : Fragment() {
 
@@ -19,7 +26,9 @@ class detallesInvestigacionFragment : Fragment() {
     private lateinit var tvDescripcion: TextView
     private lateinit var tvRecomendaciones: TextView
     private lateinit var tvConclusion: TextView
+
     private lateinit var rvImagenes: RecyclerView
+    private lateinit var btnDescargarPDF: Button
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -33,7 +42,9 @@ class detallesInvestigacionFragment : Fragment() {
         tvDescripcion = view.findViewById(R.id.tvDescripcion)
         tvRecomendaciones = view.findViewById(R.id.tvRecomendaciones)
         tvConclusion = view.findViewById(R.id.tvConclusion)
+
         rvImagenes = view.findViewById(R.id.rvImagenes)
+        btnDescargarPDF = view.findViewById(R.id.btnDescargarPDF)
 
         // Obtener los datos pasados a través del bundle
         val investigacion = arguments?.getParcelable<cls_Investigacion>("investigacion")
@@ -46,6 +57,12 @@ class detallesInvestigacionFragment : Fragment() {
             tvRecomendaciones.text = "Recomendaciones: ${it.recomendaciones}"
             tvConclusion.text = "Conclusión: ${it.conclusion}"
 
+            // Configurar acción para el botón de descarga
+            btnDescargarPDF.setOnClickListener {
+                descargarPdf(investigacion.pdfUrl)
+            }
+        }
+
             // Configurar el RecyclerView para mostrar las imágenes
             rvImagenes.layoutManager =
                 LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
@@ -54,6 +71,11 @@ class detallesInvestigacionFragment : Fragment() {
             rvImagenes.adapter = ImagenesAdapter(requireContext(), it.imagenes)
         }
         return view
+    }
+    private fun descargarPdf(pdfUrl: String) {
+        // Abrir el navegador para descargar el PDF
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(pdfUrl))
+        startActivity(intent)
     }
 
     companion object {
