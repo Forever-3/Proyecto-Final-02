@@ -1,13 +1,16 @@
-package com.forever3.proyectofinal.ui.home  // Actualiza el paquete según la estructura de tu proyecto
+package com.forever3.proyectofinal.ui.home  // Actualiza el paquete según la estructura
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.forever3.proyectofinal.R
-import com.forever3.proyectofinal.ui.home.cls_Investigacion  // Asegúrate de que el modelo esté en el paquete correcto
+import com.forever3.proyectofinal.ui.home.cls_Investigacion
 
 class detallesInvestigacionFragment : Fragment() {
 
@@ -17,6 +20,7 @@ class detallesInvestigacionFragment : Fragment() {
     private lateinit var tvDescripcion: TextView
     private lateinit var tvRecomendaciones: TextView
     private lateinit var tvConclusion: TextView
+    private lateinit var btnDescargarPDF: Button
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -30,6 +34,7 @@ class detallesInvestigacionFragment : Fragment() {
         tvDescripcion = view.findViewById(R.id.tvDescripcion)
         tvRecomendaciones = view.findViewById(R.id.tvRecomendaciones)
         tvConclusion = view.findViewById(R.id.tvConclusion)
+        btnDescargarPDF = view.findViewById(R.id.btnDescargarPDF)
 
         // Obtener los datos pasados a través del bundle
         val investigacion = arguments?.getParcelable<cls_Investigacion>("investigacion")
@@ -41,9 +46,19 @@ class detallesInvestigacionFragment : Fragment() {
             tvDescripcion.text = "Descripción: ${it.descripcion}"
             tvRecomendaciones.text = "Recomendaciones: ${it.recomendaciones}"
             tvConclusion.text = "Conclusión: ${it.conclusion}"
+
+            // Configurar acción para el botón de descarga
+            btnDescargarPDF.setOnClickListener {
+                descargarPdf(investigacion.pdfUrl)
+            }
         }
 
         return view
+    }
+    private fun descargarPdf(pdfUrl: String) {
+        // Abrir el navegador para descargar el PDF
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(pdfUrl))
+        startActivity(intent)
     }
 
     companion object {
